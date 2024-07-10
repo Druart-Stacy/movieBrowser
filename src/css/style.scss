@@ -1,30 +1,22 @@
-// @keyframes scroll {
-//     0% {
-//         transform: translateX(0);
-//     }
-//     100% {
-//         transform: translateX(-100%);
-//     }
-// }
+/* Animation for scrolling */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
 
-// .animate-scroll {
-//     animation: scroll 10s linear infinite;
-//     }
-
-
-// body{
-//     background-color: black;
-// }
-// // modengsm
-// @media screen and (max-width: 600px) {
-    
-// }
+.animate-scroll {
+    animation: scroll 10s linear infinite;
+}
 
 body {
-    background-color: rgb(96, 114, 118);
+    background-color: black;
 }
-/* style.css */
 
+/* Grid layout */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -41,9 +33,8 @@ body {
     height: auto;
     margin-bottom: 10px;
 }
-header{
 
-}
+/* Navigation styles */
 nav {
     display: flex;
     flex-wrap: nowrap;
@@ -52,34 +43,52 @@ nav {
     align-content: space-around;
 }
 
+footer {
+    display: flex;
+    align-content: space-around;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
 
-  
-// .topnav .Search[type=text] {
-//     display: flex;
-//     float: left;
-//     padding: 6px;
-//     margin-top: 8px;
-//     margin-right: 16px;
-//     border: none;
-//     font-size: 17px;
-//   }
+/* Image row styles */
+.image-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    margin-top: 50px;
+}
 
+.iconfooter {
+    width: 40px;
+}
+
+/* Search bar styles */
+#category-nav {
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
 
 #search-form {
-    margin-top: 20px;
+    margin-top: -60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%; /* Ajustez la largeur selon vos besoins */
-    max-width: 600px; /* Largeur maximale */
+    width: 100%;
+    border-radius: 30px;
 }
+
 #search-input {
-    flex: 1;
     padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    width: 200px;
     font-size: 16px;
-    border: none;
-    border-radius: 5px 0 0 5px;
+    outline: none;
 }
+
 #search-button {
     padding: 10px 20px;
     font-size: 16px;
@@ -89,7 +98,79 @@ nav {
     color: white;
     cursor: pointer;
 }
-#movie-browser{
+
+#movie-browser {
     margin: 30px 20px;
     font-size: 30px;
+}
+
+.release-date, .movie-title {
+    color: white;
+}
+
+/* Overlay styles */
+.container {
+    position: relative;
+    width: 50%;
+}
+
+.image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    background-color: #008CBA;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    transition: .9s ease;
+}
+
+.container:hover .overlay {
+    left: 0;
+}
+
+/* Search container styles */
+#search-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#search-form {
+    display: inline-block;
+}
+
+#search-input {
+    padding: 10px;
+    font-size: 16px;
+}
+
+#img-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.image-container {
+    margin: 10px;
+    text-align: center;
+}
+
+.movie-poster {
+    width: 200px;
+    height: auto;
+}
+
+.movie-title {
+    margin: 10px 0 5px;
+}
+
+.release-date {
+    margin: 0;
 }

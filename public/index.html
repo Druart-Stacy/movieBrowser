@@ -1,23 +1,21 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Film</title>
-    <link rel="stylesheet" href="css/style.css"> <!-- Assurez-vous d'importer votre feuille de style correctement -->
+    <title>Index</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="movie-browser"></div>
-        <nav id="category-nav"></nav>
+    <div id="search-container">
         <form id="search-form">
-            <input type="text" id="search-input" placeholder="Rechercher un film...">
-            <button type="submit" id="search-button">Rechercher</button>
+            <input type="text" id="search-input" placeholder="Search for a movie...">
+            <button type="submit">Search</button>
+            <div id="img-container"></div>
+    <script src="/src/index2.js"></script>
+
         </form>
-    </header>
-    <div id="result"></div>
-    <div id="img-container"></div>
-    <script src="src/index.js"></script>
+    </div>
+    
 </body>
 </html>
