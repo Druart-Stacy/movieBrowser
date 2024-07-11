@@ -1,32 +1,43 @@
-// API keys et jetons d'accès
-const apiKey = '3bdbbc7774806ef322aac777bb786e18';
-const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzYmRiYmM3Nzc0ODA2ZWYzMjJhYWM3NzdiYjc4NmUxOCIsIm5iZiI6MTcyMDE2NzYzNS45NDk1MDEsInN1YiI6IjY2ODY5MjdiOTc5ZDgwYjg1OTFhNmJjMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.n3nr8T4O4nIU5_CMmNX8KDHJbTi_JPGycyn5PwEyo9s';
-
-// Chargement des films populaires au chargement de la page
+// Écouteur d'événement pour le chargement du DOM
 document.addEventListener("DOMContentLoaded", function() {
     getPopularMovies(); // Charge les films populaires par défaut
-    createHeader(); // Crée l'en-tête
-    createFooter(); // Crée le pied de page
+    createHeader(); // Crée le header avec les catégories
+    createFooter(); // Crée le footer avec les liens
+
+    // Gestion du formulaire de recherche
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm !== '') {
+                searchMovies(searchTerm); // Recherche les films correspondant au terme saisi
+            } else {
+                getPopularMovies(); // Recherche les films populaires si aucun terme n'est saisi
+            }
+        });
+    }
+
+    // Ajout d'un gestionnaire d'événements aux liens de catégorie
+    const categoryNav = document.getElementById('category-nav');
+    const categoryLinks = categoryNav.querySelectorAll('a');
+
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Empêche le comportement par défaut du lien
+            const category = this.innerText; // Récupère le texte du lien (par exemple 'Fantasy')
+            filterMoviesByCategory(category); // Filtre les films par catégorie
+        });
+    });
 });
 
-// Gestion du formulaire de recherche
-const searchForm = document.getElementById('search-form');
-const searchInput = document.getElementById('search-input');
-
-if (searchForm) {
-    searchForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const searchTerm = searchInput.value.trim();
-        if (searchTerm !== '') {
-            searchMovies(searchTerm);
-        } else {
-            getPopularMovies(); // Recherche les films populaires si aucun terme n'est saisi
-        }
-    });
-}
-
-// Fonction pour récupérer les films populaires
+// Fonction pour obtenir les films populaires
 function getPopularMovies() {
+    const apiKey = '3bdbbc7774806ef322aac777bb786e18';
+    const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzYmRiYmM3Nzc0ODA2ZWYzMjJhYWM3NzdiYjc4NmUxOCIsIm5iZiI6MTcyMDE2NzYzNS45NDk1MDEsInN1YiI6IjY2ODY5MjdiOTc5ZDgwYjg1OTFhNmJjMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.n3nr8T4O4nIU5_CMmNX8KDHJbTi_JPGycyn5PwEyo9s';
+
     fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`, {
         headers: {
             Authorization: `Bearer ${accessToken}`
@@ -34,35 +45,17 @@ function getPopularMovies() {
     })
     .then(response => response.json())
     .then(data => {
-        displayMovies(data);
+        displayMovies(data); // Affiche les films populaires
     })
     .catch(error => {
-        console.error('Error fetching data:', error);
+        console.error('Erreur lors de la récupération des données :', error);
     });
 }
 
-// Fonction pour rechercher des films par terme de recherche
-function searchMovies(query) {
-    const apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(query)}`;
-
-    fetch(apiUrl, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        displayMovies(data);
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-    });
-}
-
-// Fonction pour afficher les films dans le conteneur d'images
+// Fonction pour afficher les films
 function displayMovies(data) {
     const imgContainer = document.getElementById('img-container');
-    imgContainer.innerHTML = '';
+    imgContainer.innerHTML = ''; // Réinitialise le contenu
 
     data.results.forEach(movie => {
         if (movie.poster_path) {
@@ -74,245 +67,167 @@ function displayMovies(data) {
             img.alt = movie.title;
             img.className = 'movie-poster';
 
-            const title = document.createElement('h3');
-            title.textContent = movie.title;
-            title.className = 'movie-title';
-
-            const releaseDate = document.createElement('p');
-            releaseDate.textContent = `Release date: ${movie.release_date}`;
-            releaseDate.className = 'release-date';
-
-            container.addEventListener('click', () => {
-                const url = `info.html?title=${encodeURIComponent(movie.title)}&description=${encodeURIComponent(movie.overview)}&src=${encodeURIComponent(img.src)}`;
-                window.location.href = url;
+            // Ajoute un événement pour rediriger vers une page de détails lors du clic
+            img.addEventListener('click', () => {
+                // Utiliser localStorage pour stocker les détails du film
+                localStorage.setItem('selectedMovie', JSON.stringify(movie));
+                // Rediriger vers la page de détails
+                window.location.href = 'details.html';
             });
 
             container.appendChild(img);
-            container.appendChild(title);
-            container.appendChild(releaseDate);
             imgContainer.appendChild(container);
         }
     });
 }
 
-// Fonction pour créer le header
+// Fonction pour afficher les détails d'un film sur la page de détails
+function showMovieDetails() {
+    const movieDetailsContainer = document.getElementById('movie-details');
+    const movie = JSON.parse(localStorage.getItem('selectedMovie')); // Récupère les détails du film depuis localStorage
 
+    if (movie) {
+        movieDetailsContainer.innerHTML = ''; // Réinitialise le contenu
+
+        const title = document.createElement('h3');
+        title.textContent = movie.title;
+
+        const releaseDate = document.createElement('p');
+        releaseDate.textContent = `Date de sortie : ${movie.release_date}`;
+
+        const description = document.createElement('p');
+        description.textContent = movie.overview;
+
+        const img = document.createElement('img');
+        img.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+        img.alt = movie.title;
+        img.className = 'movie-poster';
+
+        movieDetailsContainer.appendChild(img);
+        movieDetailsContainer.appendChild(title);
+        movieDetailsContainer.appendChild(releaseDate);
+        movieDetailsContainer.appendChild(description);
+
+        // Ajoute une classe active pour afficher les détails
+        movieDetailsContainer.classList.add('active');
+    }
+}
+
+// Fonction pour créer le header
 function createHeader() {
     const header = document.createElement('header');
     header.classList.add('header');
 
-    const movieBrowser = document.getElementById('movie-browser');
+    const movieBrowser = document.createElement('div');
     movieBrowser.id = 'movie-browser';
-    const categoryNav = document.getElementById('category-nav');
-    
-    const part1 = document.createElement("span");
-    part1.innerText = 'Movie';
-    part1.style.color = 'orange';
+    movieBrowser.textContent = 'Movie Browser';
 
-    const part2 = document.createElement("span");
-    part2.innerText = 'Browser';
-    part2.style.color = 'white';
-    movieBrowser.appendChild(part1);
-    movieBrowser.appendChild(part2);
-    header.appendChild(movieBrowser);
-    
-         
+    const categoryNav = document.createElement('nav');
+    categoryNav.id = 'category-nav';
 
     const categories = ['Fantasy', 'Horror', 'Science Fiction', 'Documentary'];
     categories.forEach(category => {
         const link = document.createElement("a");
         link.setAttribute("href", "#");
         link.innerText = category;
-        if (categoryNav) {
-            categoryNav.appendChild(link);
-        }
+        link.classList.add('category-link'); // Ajoute une classe pour cibler ces liens
+        categoryNav.appendChild(link);
     });
 
-    document.body.prepend(header);
+    header.appendChild(movieBrowser);
+    header.appendChild(categoryNav);
+
+    document.body.prepend(header); // Ajoute le header au début du body
 }
 
-    //  Fonction pour créer le footer
- function createFooter() {
-     const footer = document.createElement('footer');
-     footer.classList.add('footer');
+// Fonction pour créer le footer
+function createFooter() {
+    const footer = document.createElement('footer');
+    footer.classList.add('footer');
 
-     const footerContent = `
-         <div class="iconfooter">
-             <a href="index.html">
-                 <img src="footer/home.svg" class="iconfooter" alt="Home">
-             </a>
-             <a href="recherche.html">
-                 <img src="footer/recherche.svg" class="iconfooter" alt="Search">
-            </a>
-             <a href="compte.html">
-                 <img src="footer/compte.svg" class="iconfooter" alt="Account">
-             </a>
-         </div>
-     `;
+    const iconFooter = document.createElement('div');
+    iconFooter.classList.add('iconfooter');
 
-     footer.innerHTML = footerContent;
-     document.body.appendChild(footer);
+    const homeLink = createFooterLink('index.html', 'footer/home.svg', 'Home');
+    const searchLink = createFooterLink('recherche.html', 'footer/recherche.svg', 'Search');
+    const accountLink = createFooterLink('compte.html', 'footer/compte.svg', 'Account');
+
+    iconFooter.appendChild(homeLink);
+    iconFooter.appendChild(searchLink);
+    iconFooter.appendChild(accountLink);
+
+    footer.appendChild(iconFooter);
+    document.body.appendChild(footer); // Ajoute le footer à la fin du body
+}
+
+// Fonction pour créer un lien de footer
+function createFooterLink(href, src, alt) {
+    const link = document.createElement('a');
+    link.setAttribute('href', href);
+
+    const img = document.createElement('img');
+    img.setAttribute('src', src);
+    img.setAttribute('class', 'iconfooter');
+    img.setAttribute('alt', alt);
+
+    link.appendChild(img);
+    return link;
+}
+
+// Fonction pour rechercher des films
+function searchMovies(query) {
+    const apiKey = '3bdbbc7774806ef322aac777bb786e18';
+    const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzYmRiYmM3Nzc0ODA2ZWYzMjJhYWM3NzdiYjc4NmUxOCIsIm5iZiI6MTcyMDE2NzYzNS45NDk1MDEsInN1YiI6IjY2ODY5MjdiOTc5ZDgwYjg1OTFhNmJjMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.n3nr8T4O4nIU5_CMmNX8KDHJbTi_JPGycyn5PwEyo9s';
+    
+    const apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(query)}`;
+
+    fetch(apiUrl, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayMovies(data); // Affiche les films correspondant à la recherche
+    })
+    .catch(error => {
+        console.error('Erreur lors de la récupération des données :', error);
+    });
+}
+
+// Fonction pour filtrer les films par catégorie
+function filterMoviesByCategory(category) {
+    const apiKey = '3bdbbc7774806ef322aac777bb786e18';
+    const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzYmRiYmM3Nzc0ODA2ZWYzMjJhYWM3NzdiYjc4NmUxOCIsIm5iZiI6MTcyMDE2NzYzNS45NDk1MDEsInN1YiI6IjY2ODY5MjdiOTc5ZDgwYjg1OTFhNmJjMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.n3nr8T4O4nIU5_CMmNX8KDHJbTi_JPGycyn5PwEyo9s';
+    const categoryId = getCategoryID(category); // Fonction pour obtenir l'ID de catégorie en fonction du nom
+
+    fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${categoryId}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayMovies(data); // Affiche les films de la catégorie
+    })
+    .catch(error => {
+        console.error('Erreur lors de la récupération des données :', error);
+    });
+}
+
+// Fonction pour obtenir l'ID de catégorie en fonction du nom
+function getCategoryID(category) {
+    // Utilisez une table de correspondance ou une API pour obtenir l'ID de catégorie en fonction du nom
+    switch (category.toLowerCase()) {
+        case 'fantasy':
+            return 14;
+        case 'horror':
+            return 27;
+        case 'science fiction':
+            return 878;
+        case 'documentary':
+            return 99;
+        default:
+            return ''; // Gérer les erreurs ou les catégories non prises en charge
     }
-
-
-
-// // Import de layout.js si nécessaire
-// // import './layout.js';
-
-// // API keys et jetons d'accès
-// const apiKey = '3bdbbc7774806ef322aac777bb786e18';
-// const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzYmRiYmM3Nzc0ODA2ZWYzMjJhYWM3NzdiYjc4NmUxOCIsIm5iZiI6MTcyMDE2NzYzNS45NDk1MDEsInN1YiI6IjY2ODY5MjdiOTc5ZDgwYjg1OTFhNmJjMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.n3nr8T4O4nIU5_CMmNX8KDHJbTi_JPGycyn5PwEyo9s';
-
-// // Chargement des films populaires au chargement de la page
-// document.addEventListener("DOMContentLoaded", function() {
-//     getPopularMovies(); // Charge les films populaires par défaut
-// });
-
-// // Gestion du formulaire de recherche
-// const searchForm = document.getElementById('search-form');
-// const searchInput = document.getElementById('search-input');
-
-// if (searchForm) {
-//     searchForm.addEventListener('submit', function(event) {
-//         event.preventDefault();
-//         const searchTerm = searchInput.value.trim();
-//         if (searchTerm !== '') {
-//             searchMovies(searchTerm);
-//         } else {
-//             getPopularMovies(); // Recherche les films populaires si aucun terme n'est saisi
-//         }
-//     });
-// }
-
-// // Fonction pour récupérer les films populaires
-// function getPopularMovies() {
-//     fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`, {
-//         headers: {
-//             Authorization: `Bearer ${accessToken}`
-//         }
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         displayMovies(data);
-//     })
-//     .catch(error => {
-//         console.error('Error fetching data:', error);
-//     });
-// }
-
-// // Fonction pour rechercher des films par terme de recherche
-// function searchMovies(query) {
-//     const apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(query)}`;
-
-//     fetch(apiUrl, {
-//         headers: {
-//             Authorization: `Bearer ${accessToken}`
-//         }
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         displayMovies(data);
-//     })
-//     .catch(error => {
-//         console.error('Error fetching data:', error);
-//     });
-// }
-
-// // Fonction pour afficher les films dans le conteneur d'images
-// function displayMovies(data) {
-//     const imgContainer = document.getElementById('img-container');
-//     imgContainer.innerHTML = '';
-
-//     data.results.forEach(movie => {
-//         if (movie.poster_path) {
-//             const container = document.createElement('div');
-//             container.className = 'image-container';
-
-//             const img = document.createElement('img');
-//             img.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-//             img.alt = movie.title;
-//             img.className = 'movie-poster';
-
-//             const title = document.createElement('h3');
-//             title.textContent = movie.title;
-//             title.className = 'movie-title';
-
-//             const releaseDate = document.createElement('p');
-//             releaseDate.textContent = `Release date: ${movie.release_date}`;
-//             releaseDate.className = 'release-date';
-
-//             container.addEventListener('click', () => {
-//                 const url = `info.html?title=${encodeURIComponent(movie.title)}&description=${encodeURIComponent(movie.overview)}&src=${encodeURIComponent(img.src)}`;
-//                 window.location.href = url;
-//             });
-
-//             container.appendChild(img);
-//             container.appendChild(title);
-//             container.appendChild(releaseDate);
-//             imgContainer.appendChild(container);
-//         }
-//     });
-// }
-
-// // Création du header et du footer
-// document.addEventListener("DOMContentLoaded", function() {
-//     createHeader();
-//     createFooter();
-// });
-
-// // Fonction pour créer le header
-// function createHeader() {
-//     const header = document.createElement('header');
-//     header.classList.add('header');
-
-//     const movieBrowser = document.getElementById('movie-browser');
-//     const categoryNav = document.getElementById('category-nav');
-
-//     const part1 = document.createElement("span");
-//     part1.innerText = 'Movie';
-//     part1.style.color = 'orange';
-
-//     const part2 = document.createElement("span");
-//     part2.innerText = 'Browser';
-//     part2.style.color = 'white';
-
-//     if (movieBrowser) {
-//         movieBrowser.appendChild(part1);
-//         movieBrowser.appendChild(part2);
-//     }
-
-//     const categories = ['Fantasy', 'Horror', 'Science Fiction', 'Documentary'];
-//     categories.forEach(category => {
-//         const link = document.createElement("a");
-//         link.setAttribute("href", "#");
-//         link.innerText = category;
-//         if (categoryNav) {
-//             categoryNav.appendChild(link);
-//         }
-//     });
-
-//     document.body.prepend(header);
-// }
-
-// // Fonction pour créer le footer
-// function createFooter() {
-//     const footer = document.createElement('footer');
-//     footer.classList.add('footer');
-
-//     const footerContent = `
-//         <div class="iconfooter">
-//             <a href="index.html">
-//                 <img src="footer/home.svg" class="iconfooter" alt="Home">
-//             </a>
-//             <a href="recherche.html">
-//                 <img src="footer/recherche.svg" class="iconfooter" alt="Search">
-//             </a>
-//             <a href="compte.html">
-//                 <img src="footer/compte.svg" class="iconfooter" alt="Account">
-//             </a>
-//         </div>
-//     `;
-
-//     footer.innerHTML = footerContent;
-//     document.body.appendChild(footer);
-// }
+}

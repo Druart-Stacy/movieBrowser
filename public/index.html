@@ -1,27 +1,54 @@
-<!DOCTYPE html>
+
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
     <link rel="stylesheet" href="style.css">
-    
 </head>
 <body>
     <header class="header">
-        <div id="movie-browser"></div>
+        <div id="movie-browser">
+            <span style="color: orange;">Movie</span>
+            <span style="color: white;">Browser</span>
+        </div>
         <nav id="category-nav"></nav>
     </header>
-    <div id="search-container">
+<div id="search-container">
         <form id="search-form">
-            <input type="text" id="search-input" placeholder="Search for a movie...">
+            <input type="text" id="search-input" placeholder="recherche...">
             <button type="submit">Search</button>
         </form>
-    </div>
-
+    </div> 
+    <div id="img-container" class="scroll-container"></div>
+    <style>
+        /* Style CSS pour les images et les détails */
+        .image-container {
+            cursor: pointer;
+            display: inline-block;
+            margin: 10px;
+        }
+        .movie-poster {
+            width: 200px;
+            height: auto;
+        }
+        .movie-detail {
+            display: none;
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+        }
+        .movie-detail.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
     <div id="img-container"></div>
-   
+    <div id="movie-details" class="movie-detail"></div>
+
     <script src="./src/index.js"></script>
-    
 </body>
 </html>
