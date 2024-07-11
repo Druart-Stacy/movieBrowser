@@ -43,12 +43,35 @@ nav {
     align-content: space-around;
 }
 
-footer {
+
+/* Footer styles */
+.footer {
     display: flex;
-    align-content: space-around;
-    flex-direction: row;
+    flex-direction: row; /* Les éléments enfants seront disposés en ligne (côte à côte) */
+    flex-wrap: nowrap; /* Les éléments ne passeront pas à la ligne suivante */
+    justify-content: space-evenly; /* Espace égal entre les éléments */
+    align-items: center; /* Centrer les éléments verticalement */
+    background-color: #333; /* Couleur de fond du footer */
+    padding: 20px; /* Espacement interne pour le footer */
+}
+#movie-browser {
+    display: flex;
+    align-items: center;
+}
+
+#movie-browser span {
+    font-size: 1.5em;
+}
+/* Icon styles */
+.iconfooter {
+    width: 50px;
+    height: 50px;
+    display: flex;
     justify-content: center;
-    flex-wrap: nowrap;
+    align-items: center;
+    margin: 5px;
+    color: white; /* Couleur du texte ou des icônes */
+    // border-radius: 50%; /* Faire des icônes rondes */
 }
 
 /* Image row styles */
@@ -58,10 +81,10 @@ footer {
     margin-bottom: 20px;
     margin-top: 50px;
 }
+// .iconfooter {
+//     width: 40px;
+// }
 
-.iconfooter {
-    width: 40px;
-}
 
 /* Search bar styles */
 #category-nav {
@@ -150,6 +173,7 @@ footer {
     font-size: 16px;
 }
 
+/* Container for movie images */
 #img-container {
     display: flex;
     flex-wrap: wrap;
@@ -160,10 +184,12 @@ footer {
 .image-container {
     margin: 10px;
     text-align: center;
+    flex: 1 1 calc(50% - 20px); /* Adjust the width for mobile view */
+    box-sizing: border-box;
 }
 
 .movie-poster {
-    width: 200px;
+    width: 100%;
     height: auto;
 }
 
@@ -173,4 +199,17 @@ footer {
 
 .release-date {
     margin: 0;
+}
+
+/* Adjust layout for larger screens */
+@media (min-width: 768px) {
+    .image-container {
+        flex: 1 1 calc(33.333% - 20px); /* 3 columns for tablets */
+    }
+}
+
+@media (min-width: 1024px) {
+    .image-container {
+        flex: 1 1 calc(25% - 20px); /* 4 columns for desktops */
+    }
 }

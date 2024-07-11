@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Browser</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Index</title>
+    <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
-<h1>Recherche de films</h1>
-    <form id="search-form">
-        <input type="text" id="search-input" placeholder="Entrez le nom d'un film">
-        <button type="submit">Rechercher</button>
-    </form>
-    <div id="img-container"></div>
+    <div id="search-container">
+        <form id="search-form">
+            <input type="text" id="search-input" placeholder="Search for a movie...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
 
-    <script src="script2.js"></script>
+    <div id="img-container"></div>
+   
+    <script src="./src/index.js"></script>
+    
 </body>
-</html> 
+</html>

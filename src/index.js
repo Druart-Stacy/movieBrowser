@@ -1,8 +1,6 @@
-// Importation des modules et styles
-// import './layout.js';
 import './movies.js';
 import './css/style.css';
-import './layout.js';
+// import './layout.js';
 
 // // Fonction pour récupérer les données depuis l'API
 // async function fetchImageData() {
