@@ -22,15 +22,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Ajout d'un gestionnaire d'événements aux liens de catégorie
     const categoryNav = document.getElementById('category-nav');
-    const categoryLinks = categoryNav.querySelectorAll('a');
-
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', function(event) {
-            event.preventDefault(); // Empêche le comportement par défaut du lien
-            const category = this.innerText; // Récupère le texte du lien (par exemple 'Fantasy')
-            filterMoviesByCategory(category); // Filtre les films par catégorie
+    if (categoryNav) {
+        const categoryLinks = categoryNav.querySelectorAll('a');
+        categoryLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault(); // Empêche le comportement par défaut du lien
+                const category = this.innerText; // Récupère le texte du lien (par exemple 'Fantasy')
+                filterMoviesByCategory(category); // Filtre les films par catégorie
+            });
         });
-    });
+    }
 });
 
 // Fonction pour obtenir les films populaires
@@ -52,41 +53,78 @@ function getPopularMovies() {
     });
 }
 
-// Fonction pour afficher les films
+
 function displayMovies(data) {
     const imgContainer = document.getElementById('img-container');
-    imgContainer.innerHTML = ''; // Réinitialise le contenu
+    if (imgContainer) {
+        imgContainer.innerHTML = ''; // Réinitialise le contenu
 
-    data.results.forEach(movie => {
-        if (movie.poster_path) {
-            const container = document.createElement('div');
-            container.className = 'image-container';
+        data.results.forEach(movie => {
+            if (movie.poster_path) {
+                const container = document.createElement('div');
+                container.className = 'image-container';
 
-            const img = document.createElement('img');
-            img.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-            img.alt = movie.title;
-            img.className = 'movie-poster';
+                const img = document.createElement('img');
+                img.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+                img.alt = movie.title;
+                img.className = 'movie-poster';
 
-            // Ajoute un événement pour rediriger vers une page de détails lors du clic
-            img.addEventListener('click', () => {
-                // Utiliser localStorage pour stocker les détails du film
-                localStorage.setItem('selectedMovie', JSON.stringify(movie));
-                // Rediriger vers la page de détails
-                window.location.href = 'details.html';
-            });
+                // Ajoute un événement pour rediriger vers une page de détails lors du clic
+                img.addEventListener('click', () => {
+                    // Utiliser localStorage pour stocker les détails du film
+                    localStorage.setItem('selectedMovie', JSON.stringify(movie));
+                    // Rediriger vers la page de détails
+                    window.location.href = 'details.html';
+                });
 
-            container.appendChild(img);
-            imgContainer.appendChild(container);
-        }
-    });
+                container.appendChild(img);
+                imgContainer.appendChild(container);
+            }
+        });
+    }
 }
+document.addEventListener("DOMContentLoaded", function() {
+    showMovieDetails(); // Appeler cette fonction lorsque la page de détails est chargée
+});
 
-// Fonction pour afficher les détails d'un film sur la page de détails
 function showMovieDetails() {
     const movieDetailsContainer = document.getElementById('movie-details');
     const movie = JSON.parse(localStorage.getItem('selectedMovie')); // Récupère les détails du film depuis localStorage
 
     if (movie) {
+        movieDetailsContainer.innerHTML = ''; // Réinitialise le contenu
+
+        const title = document.createElement('h3');
+        title.textContent = movie.title;
+
+        const releaseDate = document.createElement('p');
+        releaseDate.textContent = `Date de sortie : ${movie.release_date}`;
+
+        const description = document.createElement('p');
+        description.textContent = movie.overview;
+
+        const img = document.createElement('img');
+        img.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+        img.alt = movie.title;
+        img.className = 'movie-poster';
+
+        movieDetailsContainer.appendChild(img);
+        movieDetailsContainer.appendChild(title);
+        movieDetailsContainer.appendChild(releaseDate);
+        movieDetailsContainer.appendChild(description);
+
+        // Ajoute une classe active pour afficher les détails
+        movieDetailsContainer.classList.add('active');
+    }
+}
+
+
+// Fonction pour afficher les détails d'un film sur la page de détails
+function showMovieDetails3() {
+    const movieDetailsContainer = document.getElementById('movie-details');
+    const movie = JSON.parse(localStorage.getItem('selectedMovie')); // Récupère les détails du film depuis localStorage
+
+    if (movie && movieDetailsContainer) {
         movieDetailsContainer.innerHTML = ''; // Réinitialise le contenu
 
         const title = document.createElement('h3');
