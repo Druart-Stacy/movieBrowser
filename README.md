@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-# movieBrowser
-# movieBrowser2
-
-
-# Movie Browser
+# Movie Browser v2
 
 ## Introduction
 
