@@ -1,4 +1,4 @@
-# Movie Browser v2
+# Movie Browser
 
 ## Introduction
 
