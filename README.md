@@ -1,10 +1,7 @@
 <<<<<<< HEAD
 # movieBrowser
 # movieBrowser2
-=======
-Bien sûr, voici un exemple de fichier README pour votre projet de navigateur de films :
 
----
 
 # Movie Browser
 
