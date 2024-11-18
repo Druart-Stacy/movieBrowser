@@ -74,7 +74,11 @@ function displayMovies(data) {
                     // Utiliser localStorage pour stocker les détails du film
                     localStorage.setItem('selectedMovie', JSON.stringify(movie));
                     // Rediriger vers la page de détails
+<<<<<<< HEAD
                     window.location.href = 'details.html';
+=======
+                    window.location.href = 'showMovieDetailsSeul';
+>>>>>>> 8827826 (maj)
                 });
 
                 container.appendChild(img);
@@ -84,7 +88,13 @@ function displayMovies(data) {
     }
 }
 document.addEventListener("DOMContentLoaded", function() {
+<<<<<<< HEAD
     showMovieDetails(); // Appeler cette fonction lorsque la page de détails est chargée
+=======
+    showMovieDetailsSeul(); // Appeler cette fonction lorsque la page de détails est chargée
+    showMovieDetails(); // Appeler cette fonction lorsque la page de détails est chargée
+    
+>>>>>>> 8827826 (maj)
 });
 
 function showMovieDetails() {
@@ -120,7 +130,11 @@ function showMovieDetails() {
 
 
 // Fonction pour afficher les détails d'un film sur la page de détails
+<<<<<<< HEAD
 function showMovieDetails3() {
+=======
+function showMovieDetailsSeul() {
+>>>>>>> 8827826 (maj)
     const movieDetailsContainer = document.getElementById('movie-details');
     const movie = JSON.parse(localStorage.getItem('selectedMovie')); // Récupère les détails du film depuis localStorage
 
@@ -141,6 +155,10 @@ function showMovieDetails3() {
         img.alt = movie.title;
         img.className = 'movie-poster';
 
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 8827826 (maj)
         movieDetailsContainer.appendChild(img);
         movieDetailsContainer.appendChild(title);
         movieDetailsContainer.appendChild(releaseDate);
@@ -168,7 +186,7 @@ function createHeader() {
         const link = document.createElement("a");
         link.setAttribute("href", "#");
         link.innerText = category;
-        link.classList.add('category-link'); // Ajoute une classe pour cibler ces liens
+        link.classList.add('category-link'); 
         categoryNav.appendChild(link);
     });
 
@@ -264,6 +282,8 @@ function getCategoryID(category) {
         case 'science fiction':
             return 878;
         case 'documentary':
+            return 99;
+        case 'documentary2':
             return 99;
         default:
             return ''; // Gérer les erreurs ou les catégories non prises en charge
